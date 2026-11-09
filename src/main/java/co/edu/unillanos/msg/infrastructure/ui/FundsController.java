@@ -1,6 +1,6 @@
 package co.edu.unillanos.msg.infrastructure.ui;
 
-import co.edu.unillanos.msg.application.EstimateFundsForWeek;
+import co.edu.unillanos.msg.application.usecase.EstimateFundsForWeek;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
