@@ -10,7 +10,8 @@
     <stylesheets>
         <URL value="@funds-view.css"/>
     </stylesheets>
-    <Label text="MSG Foundation&#10;Fondos de la semana" styleClass="title"/>
+    
+    <Label text="MSG Foundation Fondos de la semana" styleClass="title"/>
     <Button text="Calcular fondos" onAction="#onEstimate"/>
     <Label fx:id="totalLabel" styleClass="total"/>
 </VBox>
