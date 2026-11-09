@@ -3,28 +3,31 @@ package co.edu.unillanos.msg.infrastructure;
 import co.edu.unillanos.msg.application.port.MortgageRepository;
 import co.edu.unillanos.msg.domain.Mortgage;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /** Implementación en memoria del puerto MortgageRepository. */
 public final class InMemoryMortgageRepository implements MortgageRepository {
 
-    private final Map<String, Mortgage> byNumber = new LinkedHashMap<>();
+    private final List<Mortgage> mortgages = new ArrayList<>();
 
     @Override
     public void save(Mortgage mortgage) {
-        byNumber.put(mortgage.mortgageNumber(), mortgage);
+        mortgages.add(mortgage);
     }
 
     @Override
-    public Optional<Mortgage> findByNumber(String mortgageNumber) {
-        return Optional.ofNullable(byNumber.get(mortgageNumber));
+    public Mortgage findByNumber(String mortgageNumber) {
+        for (Mortgage mortgage : mortgages) {
+            if (mortgage.mortgageNumber().equals(mortgageNumber)) {
+                return mortgage;
+            }
+        }
+        return null;
     }
 
     @Override
     public List<Mortgage> findAll() {
-        return List.copyOf(byNumber.values());
+        return new ArrayList<>(mortgages);
     }
 }

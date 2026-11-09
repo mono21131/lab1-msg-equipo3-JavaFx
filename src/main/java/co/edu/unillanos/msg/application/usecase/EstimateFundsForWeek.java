@@ -6,9 +6,6 @@ import co.edu.unillanos.msg.application.port.OperatingExpensesRepository;
 import co.edu.unillanos.msg.domain.Investment;
 import co.edu.unillanos.msg.domain.Mortgage;
 
-import java.math.BigDecimal;
-import java.util.Objects;
-
 /**
  * Caso de uso: estimar los fondos disponibles para la semana.
  * Rol responsable: Integrador.
@@ -18,7 +15,6 @@ import java.util.Objects;
  *
  * Decisión D6 (tomada, revisable): las sumas sobre todas las hipotecas e
  * inversiones están en métodos privados de este caso de uso.
- * ¿Se quedan aquí o pasan a un experto nuevo del dominio?
  */
 public final class EstimateFundsForWeek {
 
@@ -29,58 +25,47 @@ public final class EstimateFundsForWeek {
     public EstimateFundsForWeek(MortgageRepository mortgages,
                                 InvestmentRepository investments,
                                 OperatingExpensesRepository expenses) {
-        this.mortgages = Objects.requireNonNull(mortgages);
-        this.investments = Objects.requireNonNull(investments);
-        this.expenses = Objects.requireNonNull(expenses);
+        this.mortgages = mortgages;
+        this.investments = investments;
+        this.expenses = expenses;
     }
 
-    public BigDecimal execute() {
+    public double execute() {
         return totalInvestmentIncome()
-                .add(totalCoupleContributions())
-                .subtract(weeklyOperatingExpenses())
-                .subtract(totalEscrowPaid());
+                + totalCoupleContributions()
+                - weeklyOperatingExpenses()
+                - totalEscrowPaid();
     }
 
     /** Gasto operativo de la semana. */
-    private BigDecimal weeklyOperatingExpenses() {
-        BigDecimal weeklyOperatingExpensesCalc = expenses.current().weeklyAmount();
-        return weeklyOperatingExpensesCalc;
- //       throw new UnsupportedOperationException("TODO");
+    private double weeklyOperatingExpenses() {
+        return expenses.current().weeklyAmount();
     }
 
     /** Suma del rendimiento semanal de todas las inversiones. */
-    private BigDecimal totalInvestmentIncome() {
-        BigDecimal total = BigDecimal.ZERO;
-
+    private double totalInvestmentIncome() {
+        double total = 0;
         for (Investment investment : investments.findAll()) {
-            total = total.add(investment.weeklyReturn());
+            total = total + investment.weeklyReturn();
         }
-
         return total;
-//        throw new UnsupportedOperationException("TODO");
     }
 
     /** Suma del aporte semanal de todas las parejas. */
-    private BigDecimal totalCoupleContributions() {
-        BigDecimal total = BigDecimal.ZERO;
-
+    private double totalCoupleContributions() {
+        double total = 0;
         for (Mortgage mortgage : mortgages.findAll()) {
-            total = total.add(mortgage.weeklyCoupleContribution());
+            total = total + mortgage.weeklyCoupleContribution();
         }
-
         return total;
-        //    throw new UnsupportedOperationException("TODO");
     }
 
     /** Suma del impuesto y seguro semanal de todas las hipotecas (RN8). */
-    private BigDecimal totalEscrowPaid() {
-        BigDecimal total = BigDecimal.ZERO;
-
+    private double totalEscrowPaid() {
+        double total = 0;
         for (Mortgage mortgage : mortgages.findAll()) {
-            total = total.add(mortgage.weeklyEscrow());
+            total = total + mortgage.weeklyEscrow();
         }
-
         return total;
-//        throw new UnsupportedOperationException("TODO");
     }
 }
